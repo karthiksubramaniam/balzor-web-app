@@ -1,0 +1,23 @@
+﻿@page "/about"
+@inject HttpClient http
+
+<PageTitle>About</PageTitle>
+<h3>About</h3>
+
+<div class="font-bold">
+    Created by: @AuthorName
+</div>
+
+@code {
+    private string AuthorName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var author = await http.GetAsync("about/author");
+
+        if (author.IsSuccessStatusCode)
+        {
+            this.AuthorName = await author.Content.ReadAsStringAsync();
+        }
+    }
+}
