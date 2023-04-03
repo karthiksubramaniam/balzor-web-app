@@ -1,0 +1,57 @@
+﻿@page "/login"
+@using balzor_web_app.Shared.Dtos.Login;
+@attribute [AllowAnonymous]
+@layout UnAuthorizedLayout
+
+@using Microsoft.Extensions.Logging;
+@inject ILogger<Login> _logger;
+@inject AuthenticationService _authService;
+
+<h3>Login</h3>
+
+<EditForm EditContext="@editContext" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="row">
+        <div class="col-12">
+            <label>Username</label>
+            <InputText @bind-Value="dto.Username" />
+        </div>
+
+        <div class="col-12">
+            <label>Password</label>
+            <InputText type="password" @bind-Value="dto.Password" />
+        </div>
+
+        <div class="col-12">
+            <button type="submit">Login</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private EditContext editContext;
+    private LoginRequestDto dto = new();
+    private ValidationMessageStore validationMessageStore;
+
+    protected override Task OnInitializedAsync()
+    {
+        editContext = new(dto);
+        validationMessageStore = new(editContext);
+
+        return base.OnInitializedAsync();
+    }
+
+    private async void OnValidSubmit()
+    {
+        _logger.LogInformation($"OnValidSubmit: {dto.Username}");
+
+        var response = await _authService.Authenticate(dto);
+
+        if (!response)
+        {
+            validationMessageStore.Clear();
+            validationMessageStore.Add(() => dto, "Invalid credentials.");
+        }
+    }
+}

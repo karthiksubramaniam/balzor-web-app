@@ -1,0 +1,17 @@
+﻿@page "/dashboard"
+@attribute [Authorize]
+@inject AuthenticationService  _authService;
+
+<h3>Dashboard</h3>
+
+<div>
+    <button type="submit" @onclick="@Logout">Logout</button>
+</div>
+
+@code {
+
+    private async Task Logout()
+    {
+        await _authService.Logout();
+    }
+}

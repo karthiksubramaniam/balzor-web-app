@@ -5,7 +5,7 @@ namespace balzor_web_app.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    [AllowAnonymous]
     public class AboutController : ControllerBase
     {
         private string[] _names = { "Karthik", "KK", "Karthik Subramaniam", "Karthikkumar", "Karthikkumar Subramaniam" };
